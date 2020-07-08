@@ -1,8 +1,8 @@
-FROM php:latest
+FROM php:7.4-apache
 MAINTAINER Adriano Ferreira <adrianokta@gmail.com>
 
-RUN pecl install xdebug redis; \
-    docker-php-ext-enable xdebug redis; \
+RUN pecl install xdebug; \
+    docker-php-ext-enable xdebug; \
     echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
     echo "error_log=/var/www/html/error_log.log" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
     echo "display_startup_errors = On" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
@@ -18,18 +18,6 @@ RUN pecl install xdebug redis; \
 
 RUN docker-php-ext-install pdo_mysql
 
-RUN apt-get update; \
-    apt-get install -y wget zip unzip; \
-    yes | apt-get install git; \
-    /usr/bin/wget https://get.symfony.com/cli/installer -O - | bash; \
-    mv /root/.symfony/bin/symfony /usr/local/bin/symfony;
+RUN a2enmod rewrite
 
-RUN wget -O /usr/local/bin/composer-setup.php https://getcomposer.org/installer; \
-    php /usr/local/bin/composer-setup.php; \
-    php -r "unlink('/usr/local/bin/composer-setup.php');"; \
-    mv composer.phar /usr/local/bin/composer;
-
-CMD test ! -f /var/www/html/app/symfony.lock && \
-    composer create-project symfony/website-skeleton app; \
-    cd /var/www/html/app; \
-    symfony server:start;
+RUN sed -i "s|/var/www/html|/var/www/html/public |g" /etc/apache2/sites-enabled/000-default.conf

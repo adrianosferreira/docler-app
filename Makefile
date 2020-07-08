@@ -13,6 +13,7 @@ dev:
 	@echo "== Installing all the project dependencies =="
 	@echo "============================================="
 	composer install
+	docker-compose up
 
 test:
 	@echo "========================"
