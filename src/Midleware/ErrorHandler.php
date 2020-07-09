@@ -4,7 +4,6 @@ namespace App\Midleware;
 
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Throwable;
 
 class ErrorHandler
 {
@@ -18,7 +17,7 @@ class ErrorHandler
 
     public function get(
         ServerRequestInterface $request,
-        Throwable $exception
+        $exception
     ) {
         if ( $exception->getCode() === 404 ) {
             $response = $this->responseFactory->createResponse();
