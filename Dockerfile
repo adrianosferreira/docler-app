@@ -20,4 +20,4 @@ RUN docker-php-ext-install pdo_mysql
 
 RUN a2enmod rewrite
 
-RUN sed -i "s|/var/www/html|/var/www/html/public |g" /etc/apache2/sites-enabled/000-default.conf
+COPY 000-default.conf /etc/apache2/sites-enabled/

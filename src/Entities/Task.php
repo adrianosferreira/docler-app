@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 class Task
 {
 
+    public const STATUS_NEW = 1;
+    public const STATUS_DONE = 2;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

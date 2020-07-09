@@ -1,6 +1,6 @@
 <?php
 
-use App\Controller\RoutesBuilder;
+use App\Services\RoutesBuilder;
 use Slim\Factory\AppFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';
