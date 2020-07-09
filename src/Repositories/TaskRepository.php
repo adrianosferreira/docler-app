@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Services\SerializerInterface;
 use App\Entities\Task;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
@@ -10,15 +9,12 @@ use Doctrine\Persistence\ObjectRepository;
 class TaskRepository
 {
 
-    private EntityManagerInterface        $entityManager;
-    private SerializerInterface           $responseSerializer;
+    private EntityManagerInterface $entityManager;
 
     public function __construct(
-        EntityManagerInterface $entityManager,
-        SerializerInterface $responseSerializer
+        EntityManagerInterface $entityManager
     ) {
-        $this->entityManager      = $entityManager;
-        $this->responseSerializer = $responseSerializer;
+        $this->entityManager = $entityManager;
     }
 
     public function getAll()
@@ -35,7 +31,7 @@ class TaskRepository
             $this->getRepository()->findAll()
         );
 
-        return $this->responseSerializer->parse($res);
+        return $res;
     }
 
     public function getById($id)
@@ -43,34 +39,21 @@ class TaskRepository
         $task = $this->getRepository()->findOneBy(['id' => $id]);
 
         if ( ! $task) {
-            return $this->responseSerializer->parse(
-                ['msg' => "Task {$id} not found"]
-            );
+            throw new \RuntimeException("Task {$id} not found");
         }
 
-        $res = [
+        return [
             'id'          => $task->getId(),
             'title'       => $task->getTitle(),
             'description' => $task->getDescription(),
             'status'      => $task->getStatus(),
         ];
-
-        return $this->responseSerializer->parse($res);
     }
 
     public function add(Task $task)
     {
         $this->entityManager->persist($task);
         $this->entityManager->flush();
-
-        return $this->responseSerializer->parse(
-            ['msg' => 'Task has been created']
-        );
-    }
-
-    private function getRepository(): ObjectRepository
-    {
-        return $this->entityManager->getRepository(Task::class);
     }
 
     public function delete(int $id)
@@ -78,17 +61,11 @@ class TaskRepository
         $task = $this->getRepository()->findOneBy(['id' => $id]);
 
         if ( ! $task) {
-            return $this->responseSerializer->parse(
-                ['msg' => "Task {$id} not found"]
-            );
+            throw new \RuntimeException("Task {$id} not found");
         }
 
         $this->entityManager->remove($task);
         $this->entityManager->flush();
-
-        return $this->responseSerializer->parse(
-            ['msg' => "The task {$id} has been deleted"]
-        );
     }
 
     public function update(Task $taskUpdated)
@@ -98,8 +75,8 @@ class TaskRepository
         );
 
         if ( ! $task) {
-            return $this->responseSerializer->parse(
-                ['msg' => 'A new task has been created']
+            throw new \RuntimeException(
+                "Task {$taskUpdated->getId()} not found"
             );
         }
 
@@ -116,9 +93,10 @@ class TaskRepository
         }
 
         $this->entityManager->flush();
+    }
 
-        return $this->responseSerializer->parse(
-            ['msg' => "The task {$task->getId()} has been updated"]
-        );
+    private function getRepository(): ObjectRepository
+    {
+        return $this->entityManager->getRepository(Task::class);
     }
 }
