@@ -2,7 +2,7 @@ language: php
 
 matrix:
   include:
-    - php: latest
+    - php: 7.4.0
 
   allow_failures:
     - php: nightly
