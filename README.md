@@ -5,10 +5,10 @@
 
 ## Description
 
-The REST API is running in 2 docker containers inside of a public AWS EC2 instance:
+The REST API is running in 2 docker containers inside of a public AWS EC2 instance.
 
-- Application container
-- Database container
+- Application container (PHP 7.4 apache)
+- Database container (MySQL 8.0)
 
 ## Routes
 
