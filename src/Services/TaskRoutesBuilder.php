@@ -39,7 +39,7 @@ class TaskRoutesBuilder implements RoutesBuilderInterface
             '/task/{id}',
             [
                 $this->controller,
-                'getById'
+                'getAll'
             ]
         );
 

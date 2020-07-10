@@ -5,7 +5,7 @@ namespace App\Services;
 class Sanitizer
 {
 
-    public static function sanitize($args)
+    public static function sanitize(array $args): array
     {
         return array_map(
             static function ($arg) {

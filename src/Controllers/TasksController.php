@@ -28,33 +28,13 @@ class TasksController implements ControllerInterface
 
     public function getAll(
         Request $request,
-        Response $response
-    ): Response {
-        return $this->responseFormatter->format(
-            $response,
-            $this->taskRepository->getAll()
-        );
-    }
-
-    public function getById(
-        Request $request,
         Response $response,
         $args
     ): Response {
-        try {
-            $args = Sanitizer::sanitize($args);
-            $task = $this->taskRepository->getById($args['id']);
-        } catch (\RuntimeException $exception) {
-            return $this->responseFormatter->format(
-                $response,
-                null,
-                $exception
-            );
-        }
-
+        $args = array_merge($args, $request->getQueryParams());
         return $this->responseFormatter->format(
             $response,
-            $task
+            $this->taskRepository->getAll(Sanitizer::sanitize($args))
         );
     }
 

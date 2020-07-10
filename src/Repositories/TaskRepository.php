@@ -17,7 +17,7 @@ class TaskRepository
         $this->entityManager = $entityManager;
     }
 
-    public function getAll()
+    public function getAll(?array $params)
     {
         return array_map(
             static function ($task) {
@@ -28,24 +28,8 @@ class TaskRepository
                     'status'      => $task->getStatus(),
                 ];
             },
-            $this->getRepository()->findAll()
+            $this->getRepository()->findBy($params)
         );
-    }
-
-    public function getById(int $id)
-    {
-        $task = $this->getRepository()->findOneBy(['id' => $id]);
-
-        if (! $task) {
-            throw new \RuntimeException("Task {$id} not found");
-        }
-
-        return [
-            'id'          => $task->getId(),
-            'title'       => $task->getTitle(),
-            'description' => $task->getDescription(),
-            'status'      => $task->getStatus(),
-        ];
     }
 
     public function add(Task $task)

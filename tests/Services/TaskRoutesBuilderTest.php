@@ -33,7 +33,7 @@ class TaskRoutesBuilderTest extends TestCase
                 '/task/{id}',
                 [
                     $controller,
-                    'getById'
+                    'getAll'
                 ]
             ],
             );

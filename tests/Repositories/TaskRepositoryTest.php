@@ -40,64 +40,11 @@ class TaskRepositoryTest extends TestCase
             ->onlyMethods(
                 ['findAll', 'findOneBy', 'getClassName', 'find', 'findBy']
             )->disableOriginalConstructor()->getMock();
-        $repository->method('findAll')->willReturn([$task]);
+        $repository->method('findBy')->with([])->willReturn([$task]);
 
         $entityManager->method('getRepository')->willReturn($repository);
 
-        $this->assertEquals($expected, $subject->getAll());
-    }
-
-    /**
-     * @test
-     */
-    public function itThrowsExceptionWhenTaskCouldntBeFound()
-    {
-        $this->expectException(RuntimeException::class);
-
-        $entityManager = $this->getMockBuilder(EntityManagerInterface::class)
-            ->disableOriginalConstructor()->getMock();
-        $subject       = new TaskRepository($entityManager);
-
-        $repository = $this->getMockBuilder(ObjectRepository::class)
-            ->onlyMethods(
-                ['findAll', 'findOneBy', 'getClassName', 'find', 'findBy']
-            )->disableOriginalConstructor()->getMock();
-        $repository->method('findOneBy')->with(['id' => 1])->willReturn(null);
-        $entityManager->method('getRepository')->willReturn($repository);
-        $subject->getById(1);
-    }
-
-    /**
-     * @test
-     */
-    public function itGetsTaskById()
-    {
-        $entityManager = $this->getMockBuilder(EntityManagerInterface::class)
-            ->disableOriginalConstructor()->getMock();
-        $subject       = new TaskRepository($entityManager);
-
-        $repository = $this->getMockBuilder(ObjectRepository::class)
-            ->onlyMethods(
-                ['findAll', 'findOneBy', 'getClassName', 'find', 'findBy']
-            )->disableOriginalConstructor()->getMock();
-
-        $task = new Task();
-        $task->setId(1);
-        $task->setTitle('Some Task');
-        $task->setDescription('Some Description');
-        $task->setStatus(1);
-
-        $repository->method('findOneBy')->with(['id' => 1])->willReturn($task);
-        $entityManager->method('getRepository')->willReturn($repository);
-
-        $expected = [
-            'id'          => 1,
-            'title'       => 'Some Task',
-            'description' => 'Some Description',
-            'status'      => 1
-        ];
-
-        $this->assertEquals($expected, $subject->getById(1));
+        $this->assertEquals($expected, $subject->getAll([]));
     }
 
     /**

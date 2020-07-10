@@ -20,13 +20,9 @@ class ErrorHandlerMiddleware
         $exception
     ) {
         $response = $this->responseFactory->createResponse();
-
-        if ($exception->getCode() === 404) {
-            $response->getBody()->write(
-                json_encode(['error' => $exception->getDescription()], JSON_THROW_ON_ERROR)
-            );
-        }
-
+        $response->getBody()->write(
+            json_encode(['error' => $exception->getDescription()], JSON_THROW_ON_ERROR)
+        );
         return $response;
     }
 }

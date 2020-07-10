@@ -34,6 +34,10 @@ class TasksControllerTest extends TestCase
         );
         $request  = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
+
+        $request->method('getQueryParams')
+            ->willReturn([]);
+
         $response = $this->getMockBuilder(Response::class)
             ->disableOriginalConstructor()->getMock();
 
@@ -44,7 +48,7 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $repository->method('getAll')->willReturn([$task]);
+        $repository->method('getAll')->with([])->willReturn([$task]);
 
         $responseOutput = $this->getMockBuilder(Response::class)
             ->disableOriginalConstructor()->getMock();
@@ -57,94 +61,7 @@ class TasksControllerTest extends TestCase
 
         $this->assertEquals(
             $responseOutput,
-            $subject->getAll($request, $response)
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itReturnsTaskById()
-    {
-        $repository        = $this->getMockBuilder(TaskRepository::class)
-            ->disableOriginalConstructor()->getMock();
-        $responseFormatter = $this->getMockBuilder(
-            ResponseFormatterInterface::class
-        )->onlyMethods(['format'])->disableOriginalConstructor()->getMock();
-        $taskFactory       = $this->getMockBuilder(TaskFactory::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
-        );
-        $request  = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()->getMock();
-        $response = $this->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $task = [
-            'id'          => 1,
-            'title'       => 'Some Task',
-            'description' => 'Some Description',
-            'status'      => 1
-        ];
-
-        $repository->method('getById')->willReturn($task);
-
-        $responseOutput = $this->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()->getMock();
-        $responseFormatter->method('format')->with(
-            $response,
-            $task
-
-        )->willReturn($responseOutput);
-
-        $this->assertEquals(
-            $responseOutput,
-            $subject->getById($request, $response, ['id' => 1])
-        );
-    }
-
-    /**
-     * @test
-     */
-    public function itReturnsErrorOnException()
-    {
-        $repository        = $this->getMockBuilder(TaskRepository::class)
-            ->disableOriginalConstructor()->getMock();
-        $responseFormatter = $this->getMockBuilder(
-            ResponseFormatterInterface::class
-        )->onlyMethods(['format'])->disableOriginalConstructor()->getMock();
-        $taskFactory       = $this->getMockBuilder(TaskFactory::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
-        );
-        $request  = $this->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()->getMock();
-        $response = $this->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()->getMock();
-
-        $exception = new \RuntimeException('Some message');
-
-        $repository->method('getById')->willThrowException($exception);
-
-        $responseOutput = $this->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()->getMock();
-        $responseFormatter->method('format')->with(
-            $response,
-            null,
-            $exception
-        )->willReturn($responseOutput);
-
-        $this->assertEquals(
-            $responseOutput,
-            $subject->getById($request, $response, ['id' => 1])
+            $subject->getAll($request, $response, [])
         );
     }
 
