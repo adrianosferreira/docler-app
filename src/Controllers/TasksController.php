@@ -32,6 +32,7 @@ class TasksController implements ControllerInterface
         $args
     ): Response {
         $args = array_merge($args, $request->getQueryParams());
+
         return $this->responseFormatter->format(
             $response,
             $this->taskRepository->getAll(Sanitizer::sanitize($args))
@@ -58,6 +59,7 @@ class TasksController implements ControllerInterface
         $args
     ): Response {
         try {
+            $args = Sanitizer::sanitize($args);
             $this->taskRepository->delete($args['id']);
         } catch (\RuntimeException $exception) {
             return $this->responseFormatter->format(
