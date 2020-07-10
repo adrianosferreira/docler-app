@@ -36,7 +36,7 @@ Make a production build of the application and place it inside of the `./build` 
 $ make build
 ```
 
-Run unit tests, style check and static files check:
+Run unit tests, standards check and static files check:
 ```
 $ make test
 ```
