@@ -3,7 +3,8 @@
 use App\Controllers\TasksController;
 use App\Database\EntityManagerFactory;
 use App\Factories\TaskFactory;
-use App\Midleware\ErrorHandler;
+use App\Midleware\ErrorHandlerMiddleware;
+use App\Midleware\ResponseParserMiddleware;
 use App\Repositories\TaskRepository;
 use App\Services\ResponseFormatterJson;
 use App\Services\RoutesBuilderInterface;
@@ -28,10 +29,11 @@ array_map(static function (RoutesBuilderInterface $routeBuilder) {
 }, $routesBuilders);
 
 $app->addRoutingMiddleware();
+$app->add(ResponseParserMiddleware::class);
 
 $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 $errorMiddleware->setDefaultErrorHandler(
-    [(new ErrorHandler($app->getResponseFactory())), 'get']
+    [(new ErrorHandlerMiddleware($app->getResponseFactory())), 'get']
 );
 
 $app->run();

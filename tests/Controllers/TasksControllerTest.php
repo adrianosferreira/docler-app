@@ -184,13 +184,8 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $body = 'id=1&title=Some Task&description=Some Description&status=1';
-
-        $bodyObject = $this->getMockBuilder(\stdClass::class)->addMethods(['getContents'])->getMock();
-        $bodyObject->method('getContents')->willReturn($body);
-
-        $request->method('getBody')
-            ->willReturn($bodyObject);
+        $request->method('getParsedBody')
+            ->willReturn($bodyParsed);
 
         $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
 
@@ -334,13 +329,8 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $body = 'id=1&title=Some Task&description=Some Description&status=1';
-
-        $bodyObject = $this->getMockBuilder(\stdClass::class)->addMethods(['getContents'])->getMock();
-        $bodyObject->method('getContents')->willReturn($body);
-
-        $request->method('getBody')
-            ->willReturn($bodyObject);
+        $request->method('getParsedBody')
+            ->willReturn($bodyParsed);
 
         $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
 
@@ -397,13 +387,8 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $body = 'id=1&title=Some Task&description=Some Description&status=1';
-
-        $bodyObject = $this->getMockBuilder(\stdClass::class)->addMethods(['getContents'])->getMock();
-        $bodyObject->method('getContents')->willReturn($body);
-
-        $request->method('getBody')
-            ->willReturn($bodyObject);
+        $request->method('getParsedBody')
+            ->willReturn($bodyParsed);
 
         $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
 

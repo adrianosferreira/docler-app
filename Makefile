@@ -4,6 +4,7 @@ build:
 	@echo "==================================================="
 	mkdir build
 	cp -r src build/
+	cp -r public build/
 	cp -r composer.json build/
 	composer install --no-dev --optimize-autoloader -d build/
 	rm -rf build/composer.json

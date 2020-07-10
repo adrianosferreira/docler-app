@@ -5,7 +5,7 @@ namespace App\Midleware;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class ErrorHandler
+class ErrorHandlerMiddleware
 {
 
     private ResponseFactoryInterface $responseFactory;
@@ -19,13 +19,14 @@ class ErrorHandler
         ServerRequestInterface $request,
         $exception
     ) {
-        if ( $exception->getCode() === 404 ) {
-            $response = $this->responseFactory->createResponse();
-            $response->getBody()->write(
-                json_encode(['error' => 'Route not found'])
-            );
+        $response = $this->responseFactory->createResponse();
 
-            return $response;
+        if ($exception->getCode() === 404) {
+            $response->getBody()->write(
+                json_encode(['error' => $exception->getDescription()], JSON_THROW_ON_ERROR)
+            );
         }
+
+        return $response;
     }
 }

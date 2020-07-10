@@ -8,7 +8,7 @@ use Slim\App;
 class TaskRoutesBuilder implements RoutesBuilderInterface
 {
 
-    private App                 $app;
+    private App $app;
     private ControllerInterface $controller;
 
     public function __construct(App $app, ControllerInterface $controller)

@@ -10,10 +10,10 @@ class TaskFactory
     public function create($args): Task
     {
         $task = new Task();
-        $task->setId($args['id'] ?? '');
-        $task->setTitle($args['title'] ?? '');
-        $task->setDescription($args['description'] ?? '');
-        $task->setStatus($args['status'] ?? '');
+        $task->setId($args['id'] ?? null);
+        $task->setTitle($args['title'] ?? null);
+        $task->setDescription($args['description'] ?? null);
+        $task->setStatus($args['status'] ?? null);
 
         return $task;
     }

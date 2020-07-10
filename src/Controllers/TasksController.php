@@ -6,14 +6,15 @@ use App\Entities\Task;
 use App\Factories\TaskFactory;
 use App\Repositories\TaskRepository;
 use App\Services\ResponseFormatterInterface;
-use \Psr\Http\Message\ServerRequestInterface as Request;
-use \Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
+use App\Services\Sanitizer;
 
 class TasksController implements ControllerInterface
 {
-    private TaskRepository             $taskRepository;
+    private TaskRepository $taskRepository;
     private ResponseFormatterInterface $responseFormatter;
-    private TaskFactory                $taskFactory;
+    private TaskFactory $taskFactory;
 
     public function __construct(
         TaskRepository $taskRepository,
@@ -41,6 +42,7 @@ class TasksController implements ControllerInterface
         $args
     ): Response {
         try {
+            $args = Sanitizer::sanitize($args);
             $task = $this->taskRepository->getById($args['id']);
         } catch (\RuntimeException $exception) {
             return $this->responseFormatter->format(
@@ -58,10 +60,10 @@ class TasksController implements ControllerInterface
 
     public function add(Request $request, Response $response): Response
     {
-        parse_str($request->getBody()->getContents(), $body);
+        $body           = $request->getParsedBody();
         $body['status'] = Task::STATUS_NEW;
 
-        $task = $this->taskFactory->create($body);
+        $task = $this->taskFactory->create(Sanitizer::sanitize($body));
         $this->taskRepository->add($task);
 
         return $this->responseFormatter->format(
@@ -96,10 +98,10 @@ class TasksController implements ControllerInterface
         Response $response,
         $args
     ): Response {
-        parse_str($request->getBody()->getContents(), $body);
+        $body       = $request->getParsedBody();
         $body['id'] = $args['id'];
 
-        $task = $this->taskFactory->create($body);
+        $task = $this->taskFactory->create(Sanitizer::sanitize($body));
 
         try {
             $this->taskRepository->update($task);

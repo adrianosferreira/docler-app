@@ -19,7 +19,7 @@ class TaskRepository
 
     public function getAll()
     {
-        $res = array_map(
+        return array_map(
             static function ($task) {
                 return [
                     'id'          => $task->getId(),
@@ -30,15 +30,13 @@ class TaskRepository
             },
             $this->getRepository()->findAll()
         );
-
-        return $res;
     }
 
-    public function getById($id)
+    public function getById(int $id)
     {
         $task = $this->getRepository()->findOneBy(['id' => $id]);
 
-        if ( ! $task) {
+        if (! $task) {
             throw new \RuntimeException("Task {$id} not found");
         }
 
@@ -60,7 +58,7 @@ class TaskRepository
     {
         $task = $this->getRepository()->findOneBy(['id' => $id]);
 
-        if ( ! $task) {
+        if (! $task) {
             throw new \RuntimeException("Task {$id} not found");
         }
 
@@ -74,7 +72,7 @@ class TaskRepository
             ['id' => $taskUpdated->getId()]
         );
 
-        if ( ! $task) {
+        if (! $task) {
             throw new \RuntimeException(
                 "Task {$taskUpdated->getId()} not found"
             );

@@ -35,4 +35,61 @@ class ResponseFormatterJsonTest extends TestCase
 
         $this->assertEquals($response, $subject->format($response, $data));
     }
+
+    /**
+     * @test
+     */
+    public function itFormatsErrorMessage()
+    {
+        $subject = new ResponseFormatterJson();
+
+        $data = ['error' => 'some message'];
+
+        $bodyObject = $this->getMockBuilder(\stdClass::class)->addMethods(
+            ['write']
+        )->getMock();
+
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $bodyObject->method('write')->with(
+            json_encode($data, JSON_THROW_ON_ERROR, 512)
+        )->willReturn($response);
+
+        $response->method('getBody')->willReturn($bodyObject);
+
+        $response->method('withHeader')->willReturn($response);
+
+        $exception = $this->getMockBuilder(\stdClass::class)->addMethods(['getMessage'])->disableOriginalConstructor()->getMock();
+        $exception->method('getMessage')->willReturn('some message');
+
+        $this->assertEquals($response, $subject->format($response, $data, $exception));
+    }
+
+    /**
+     * @test
+     */
+    public function itFormatsNormalMsg()
+    {
+        $subject = new ResponseFormatterJson();
+
+        $data = 'Some message';
+
+        $bodyObject = $this->getMockBuilder(\stdClass::class)->addMethods(
+            ['write']
+        )->getMock();
+
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $bodyObject->method('write')->with(
+            json_encode(['msg' => 'Some message'], JSON_THROW_ON_ERROR, 512)
+        )->willReturn($response);
+
+        $response->method('getBody')->willReturn($bodyObject);
+
+        $response->method('withHeader')->willReturn($response);
+
+        $this->assertEquals($response, $subject->format($response, $data));
+    }
 }

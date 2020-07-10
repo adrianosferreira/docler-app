@@ -10,7 +10,7 @@ class ResponseFormatterJson implements ResponseFormatterInterface
     public function format(
         Response $response,
         $data = null,
-        \Throwable $exception = null
+        $exception = null
     ) {
         $res = [];
 
