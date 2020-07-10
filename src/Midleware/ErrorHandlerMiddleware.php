@@ -21,7 +21,7 @@ class ErrorHandlerMiddleware
     ) {
         $response = $this->responseFactory->createResponse();
         $response->getBody()->write(
-            json_encode(['error' => $exception->getDescription()], JSON_THROW_ON_ERROR)
+            json_encode(['error' => $exception->getMessage()], JSON_THROW_ON_ERROR)
         );
         return $response;
     }

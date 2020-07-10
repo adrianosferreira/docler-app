@@ -44,6 +44,14 @@ class TasksController implements ControllerInterface
         $body           = $request->getParsedBody();
         $body['status'] = Task::STATUS_NEW;
 
+        if (!isset($body['title'])) {
+            return $this->responseFormatter->format(
+                $response,
+                null,
+                'The title is required'
+            );
+        }
+
         $task = $this->taskFactory->create(Sanitizer::sanitize($body));
         $this->taskRepository->add($task);
 
@@ -65,7 +73,7 @@ class TasksController implements ControllerInterface
             return $this->responseFormatter->format(
                 $response,
                 null,
-                $exception
+                $exception->getMessage()
             );
         }
 
@@ -91,7 +99,7 @@ class TasksController implements ControllerInterface
             return $this->responseFormatter->format(
                 $response,
                 null,
-                $exception
+                $exception->getMessage()
             );
         }
 

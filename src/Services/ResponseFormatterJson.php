@@ -10,12 +10,12 @@ class ResponseFormatterJson implements ResponseFormatterInterface
     public function format(
         Response $response,
         $data = null,
-        $exception = null
+        $error = null
     ) {
         $res = [];
 
-        if ($exception) {
-            $res['error'] = $exception->getMessage();
+        if ($error) {
+            $res['error'] = $error;
         } elseif (is_string($data)) {
             $res['msg'] = $data;
         } else {
