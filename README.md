@@ -15,7 +15,7 @@ The REST API is running in 2 docker containers inside of a public AWS EC2 instan
 This REST API has the following routes:
 
 | Route        | Methods           | Description  |
-| ------------- |:-------------:| -----:|
+| ------------- |:-------------:| -----|
 | /tasks      | GET, POST | The GET endpoint should be used to return all the tasks stored. The POST should be used to create a new task. |  
 | /task/{id}      | GET, PUT, DELETE      |   The GET endpoint should be used to fetch a data from a particular task. The PUT endpoint should be used for update an already stored resource. The DELETE endpoint should be used to delete a resource. | 
 
