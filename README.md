@@ -10,6 +10,8 @@ The REST API is running in 2 docker containers inside of a public AWS EC2 instan
 - Application container (PHP 7.4 apache)
 - Database container (MySQL 8.0)
 
+It is available at: http://ec2-18-222-76-112.us-east-2.compute.amazonaws.com/tasks
+
 ## Routes
 
 This REST API has the following routes:
