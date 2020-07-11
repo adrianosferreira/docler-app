@@ -23,6 +23,6 @@ class ErrorHandlerMiddleware
         $response->getBody()->write(
             json_encode(['error' => $exception->getMessage()], JSON_THROW_ON_ERROR)
         );
-        return $response;
+        return $response->withStatus($exception->getCode());
     }
 }
