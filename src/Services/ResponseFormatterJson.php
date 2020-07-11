@@ -10,12 +10,20 @@ class ResponseFormatterJson implements ResponseFormatterInterface
     public function format(
         Response $response,
         $data = null,
-        $error = null
+        $error = null,
+        $created = false
     ) {
-        $res = [];
+        $res  = [];
+        $code = 200;
+
+        if ($created) {
+            $code = 201;
+        } elseif ($error) {
+            $code = 400;
+        }
 
         if ($error) {
-            $res['error'] = $error;
+            $res['error'] = $error->getMessage();
         } elseif (is_string($data)) {
             $res['msg'] = $data;
         } else {
@@ -26,6 +34,7 @@ class ResponseFormatterJson implements ResponseFormatterInterface
             json_encode($res, JSON_THROW_ON_ERROR, 512)
         );
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response->withHeader('Content-Type', 'application/json')
+            ->withStatus($code);
     }
 }

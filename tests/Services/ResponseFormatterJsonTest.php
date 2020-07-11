@@ -32,6 +32,7 @@ class ResponseFormatterJsonTest extends TestCase
         $response->method('getBody')->willReturn($bodyObject);
 
         $response->method('withHeader')->willReturn($response);
+        $response->method('withStatus')->with(200)->willReturn($response);
 
         $this->assertEquals($response, $subject->format($response, $data));
     }
@@ -59,6 +60,7 @@ class ResponseFormatterJsonTest extends TestCase
         $response->method('getBody')->willReturn($bodyObject);
 
         $response->method('withHeader')->willReturn($response);
+        $response->method('withStatus')->with(400)->willReturn($response);
 
         $exception = $this->getMockBuilder(\stdClass::class)->addMethods(['getMessage'])->disableOriginalConstructor()->getMock();
         $exception->method('getMessage')->willReturn('some message');
@@ -89,7 +91,36 @@ class ResponseFormatterJsonTest extends TestCase
         $response->method('getBody')->willReturn($bodyObject);
 
         $response->method('withHeader')->willReturn($response);
+        $response->method('withStatus')->willReturn($response);
 
         $this->assertEquals($response, $subject->format($response, $data));
+    }
+
+    /**
+     * @test
+     */
+    public function itFormatsResponseResourceCreated()
+    {
+        $subject = new ResponseFormatterJson();
+
+        $data = ['something'];
+
+        $bodyObject = $this->getMockBuilder(\stdClass::class)->addMethods(
+            ['write']
+        )->getMock();
+
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $bodyObject->method('write')->with(
+            json_encode($data, JSON_THROW_ON_ERROR, 512)
+        )->willReturn($response);
+
+        $response->method('getBody')->willReturn($bodyObject);
+
+        $response->method('withHeader')->willReturn($response);
+        $response->method('withStatus')->with(201)->willReturn($response);
+
+        $this->assertEquals($response, $subject->format($response, $data, null, true));
     }
 }

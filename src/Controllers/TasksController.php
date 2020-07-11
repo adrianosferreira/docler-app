@@ -6,15 +6,16 @@ use App\Entities\Task;
 use App\Factories\TaskFactory;
 use App\Repositories\TaskRepository;
 use App\Services\ResponseFormatterInterface;
+use App\Services\TasksValidator;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use App\Services\Sanitizer;
 
 class TasksController implements ControllerInterface
 {
-    private TaskRepository $taskRepository;
+    private TaskRepository             $taskRepository;
     private ResponseFormatterInterface $responseFormatter;
-    private TaskFactory $taskFactory;
+    private TaskFactory                $taskFactory;
 
     public function __construct(
         TaskRepository $taskRepository,
@@ -44,11 +45,13 @@ class TasksController implements ControllerInterface
         $body           = $request->getParsedBody();
         $body['status'] = Task::STATUS_NEW;
 
-        if (!isset($body['title'])) {
+        try {
+            TasksValidator::isValid($body);
+        } catch (\BadMethodCallException $exception) {
             return $this->responseFormatter->format(
                 $response,
                 null,
-                'The title is required'
+                $exception,
             );
         }
 
@@ -57,7 +60,9 @@ class TasksController implements ControllerInterface
 
         return $this->responseFormatter->format(
             $response,
-            'A task has been created'
+            'A task has been created',
+            null,
+            true
         );
     }
 
@@ -73,7 +78,7 @@ class TasksController implements ControllerInterface
             return $this->responseFormatter->format(
                 $response,
                 null,
-                $exception->getMessage()
+                $exception
             );
         }
 
@@ -88,10 +93,20 @@ class TasksController implements ControllerInterface
         Response $response,
         $args
     ): Response {
-        $body       = $request->getParsedBody();
+        $body       = Sanitizer::sanitize($request->getParsedBody());
         $body['id'] = $args['id'];
 
-        $task = $this->taskFactory->create(Sanitizer::sanitize($body));
+        try {
+            TasksValidator::isValid($body);
+        } catch (\BadMethodCallException $exception) {
+            return $this->responseFormatter->format(
+                $response,
+                null,
+                $exception
+            );
+        }
+
+        $task = $this->taskFactory->create($body);
 
         try {
             $this->taskRepository->update($task);
@@ -99,7 +114,7 @@ class TasksController implements ControllerInterface
             return $this->responseFormatter->format(
                 $response,
                 null,
-                $exception->getMessage()
+                $exception
             );
         }
 

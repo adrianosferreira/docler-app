@@ -23,7 +23,8 @@ This REST API has the following routes:
 
 - PHP
 - Slim Framework
-- Doctrine
+- Doctrine ORM
+- Doctrine Migrations
 - MySQL
 - PHPStan
 - PHP_CodeSniffer

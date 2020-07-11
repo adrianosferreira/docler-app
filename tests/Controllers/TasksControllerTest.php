@@ -27,16 +27,13 @@ class TasksControllerTest extends TestCase
         $taskFactory       = $this->getMockBuilder(TaskFactory::class)
             ->disableOriginalConstructor()->getMock();
 
-        $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
+        $subject = new TasksController(
+            $repository, $responseFormatter, $taskFactory
         );
-        $request  = $this->getMockBuilder(Request::class)
+        $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
 
-        $request->method('getQueryParams')
-            ->willReturn([]);
+        $request->method('getQueryParams')->willReturn([]);
 
         $response = $this->getMockBuilder(Response::class)
             ->disableOriginalConstructor()->getMock();
@@ -79,9 +76,7 @@ class TasksControllerTest extends TestCase
             ->disableOriginalConstructor()->getMock();
 
         $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
+            $repository, $responseFormatter, $taskFactory
         );
         $request  = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
@@ -101,8 +96,7 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $request->method('getParsedBody')
-            ->willReturn($bodyParsed);
+        $request->method('getParsedBody')->willReturn($bodyParsed);
 
         $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
 
@@ -126,6 +120,51 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
+    public function itReturnsErrorWhenExceptionIsThrown()
+    {
+        $repository        = $this->getMockBuilder(TaskRepository::class)
+            ->disableOriginalConstructor()->getMock();
+        $responseFormatter = $this->getMockBuilder(
+            ResponseFormatterInterface::class
+        )->onlyMethods(['format'])->disableOriginalConstructor()->getMock();
+        $taskFactory       = $this->getMockBuilder(TaskFactory::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $subject  = new TasksController(
+            $repository, $responseFormatter, $taskFactory
+        );
+        $request  = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()->getMock();
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $task = new Task();
+        $task->setId(1);
+
+        $bodyParsed = [
+            'id' => 1,
+        ];
+
+        $request->method('getParsedBody')->willReturn($bodyParsed);
+
+        $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
+
+        $responseOutput = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $repository->expects($this->never())->method('add')->with($task);
+
+        $responseFormatter->method('format')->willReturn($responseOutput);
+
+        $this->assertEquals(
+            $responseOutput,
+            $subject->add($request, $response, ['id' => 1])
+        );
+    }
+
+    /**
+     * @test
+     */
     public function itDeletesTask()
     {
         $repository        = $this->getMockBuilder(TaskRepository::class)
@@ -137,9 +176,7 @@ class TasksControllerTest extends TestCase
             ->disableOriginalConstructor()->getMock();
 
         $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
+            $repository, $responseFormatter, $taskFactory
         );
         $request  = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
@@ -172,7 +209,7 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
-    public function itReturnsErrorOnExceptionWhenDeleting()
+    public function itDoesntAddOnExceptionWhenDeleting()
     {
         $repository        = $this->getMockBuilder(TaskRepository::class)
             ->disableOriginalConstructor()->getMock();
@@ -183,9 +220,7 @@ class TasksControllerTest extends TestCase
             ->disableOriginalConstructor()->getMock();
 
         $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
+            $repository, $responseFormatter, $taskFactory
         );
         $request  = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
@@ -224,9 +259,7 @@ class TasksControllerTest extends TestCase
             ->disableOriginalConstructor()->getMock();
 
         $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
+            $repository, $responseFormatter, $taskFactory
         );
         $request  = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
@@ -246,8 +279,7 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $request->method('getParsedBody')
-            ->willReturn($bodyParsed);
+        $request->method('getParsedBody')->willReturn($bodyParsed);
 
         $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
 
@@ -271,6 +303,57 @@ class TasksControllerTest extends TestCase
     /**
      * @test
      */
+    public function itDoesntUpdateWhenExceptionIsThrown()
+    {
+        $repository        = $this->getMockBuilder(TaskRepository::class)
+            ->disableOriginalConstructor()->getMock();
+        $responseFormatter = $this->getMockBuilder(
+            ResponseFormatterInterface::class
+        )->onlyMethods(['format'])->disableOriginalConstructor()->getMock();
+        $taskFactory       = $this->getMockBuilder(TaskFactory::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $subject  = new TasksController(
+            $repository, $responseFormatter, $taskFactory
+        );
+        $request  = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()->getMock();
+        $response = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $task = new Task();
+        $task->setId(1);
+        $task->setTitle('Some Task');
+        $task->setDescription('Some Description');
+        $task->setStatus(1);
+
+        $bodyParsed = [
+            'id'          => 1,
+            'title'       => 'Some Task',
+            'description' => 'Some Description',
+            'status'      => 3
+        ];
+
+        $request->method('getParsedBody')->willReturn($bodyParsed);
+
+        $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
+
+        $responseOutput = $this->getMockBuilder(Response::class)
+            ->disableOriginalConstructor()->getMock();
+
+        $repository->expects($this->never())->method('update')->with($task);
+
+        $responseFormatter->method('format')->willReturn($responseOutput);
+
+        $this->assertEquals(
+            $responseOutput,
+            $subject->update($request, $response, ['id' => 1])
+        );
+    }
+
+    /**
+     * @test
+     */
     public function itReturnsErrorWhenExceptionIsThrownWhileUpdating()
     {
         $repository        = $this->getMockBuilder(TaskRepository::class)
@@ -282,9 +365,7 @@ class TasksControllerTest extends TestCase
             ->disableOriginalConstructor()->getMock();
 
         $subject  = new TasksController(
-            $repository,
-            $responseFormatter,
-            $taskFactory
+            $repository, $responseFormatter, $taskFactory
         );
         $request  = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()->getMock();
@@ -304,8 +385,7 @@ class TasksControllerTest extends TestCase
             'status'      => 1
         ];
 
-        $request->method('getParsedBody')
-            ->willReturn($bodyParsed);
+        $request->method('getParsedBody')->willReturn($bodyParsed);
 
         $taskFactory->method('create')->with($bodyParsed)->willReturn($task);
 
@@ -314,7 +394,8 @@ class TasksControllerTest extends TestCase
 
         $exception = new \RuntimeException('Some message');
 
-        $repository->expects($this->once())->method('update')->willThrowException($exception);
+        $repository->expects($this->once())->method('update')
+            ->willThrowException($exception);
 
         $responseFormatter->method('format')->with(
             $response,

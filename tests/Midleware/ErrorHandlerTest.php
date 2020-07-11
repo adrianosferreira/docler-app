@@ -37,9 +37,9 @@ class ErrorHandlerTest extends TestCase
 
         $request = $this->getMockBuilder(ServerRequestInterface::class)->disableOriginalConstructor()->getMock();
 
-        $exception = $this->getMockBuilder(\stdClass::class)->addMethods(['getCode', 'getDescription'])->disableOriginalConstructor()->getMock();
+        $exception = $this->getMockBuilder(\stdClass::class)->addMethods(['getCode', 'getMessage'])->disableOriginalConstructor()->getMock();
         $exception->method('getCode')->willReturn(404);
-        $exception->method('getDescription')->willReturn('Some description');
+        $exception->method('getMessage')->willReturn('Some description');
 
         $this->assertEquals($response, $subject->get($request, $exception));
     }
