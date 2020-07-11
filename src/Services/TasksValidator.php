@@ -14,7 +14,7 @@ class TasksValidator implements ValidatorInterface
     public static function isValid($data)
     {
         foreach (self::REQUIRED as $field) {
-            if ( ! isset($data[$field])) {
+            if (! isset($data[$field])) {
                 throw new \BadMethodCallException(
                     "The {$field} is required and is missing"
                 );

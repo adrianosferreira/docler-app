@@ -13,9 +13,9 @@ use App\Services\Sanitizer;
 
 class TasksController implements ControllerInterface
 {
-    private TaskRepository             $taskRepository;
+    private TaskRepository $taskRepository;
     private ResponseFormatterInterface $responseFormatter;
-    private TaskFactory                $taskFactory;
+    private TaskFactory $taskFactory;
 
     public function __construct(
         TaskRepository $taskRepository,
@@ -52,7 +52,7 @@ class TasksController implements ControllerInterface
                 $response,
                 null,
                 $exception,
-                );
+            );
         }
 
         $task = $this->taskFactory->create(Sanitizer::sanitize($body));

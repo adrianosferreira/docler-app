@@ -14,14 +14,19 @@ class ErrorHandlerTest extends TestCase
     /**
      * @test
      */
-    public function itReturnsnotFoundError() {
-        $responseFactory = $this->getMockBuilder(ResponseFactoryInterface::class)->disableOriginalConstructor()->getMock();
-        $subject = new ErrorHandlerMiddleware($responseFactory);
-        $response = $this->getMockBuilder(ResponseInterface::class)->disableOriginalConstructor()->getMock();
-        $body = $this->getMockBuilder(\stdClass::class)->addMethods(['write'])->disableOriginalConstructor()->getMock();
+    public function itReturnsnotFoundError()
+    {
+        $responseFactory = $this->getMockBuilder(
+            ResponseFactoryInterface::class
+        )->disableOriginalConstructor()->getMock();
+        $subject         = new ErrorHandlerMiddleware($responseFactory);
+        $response        = $this->getMockBuilder(ResponseInterface::class)
+            ->disableOriginalConstructor()->getMock();
+        $body            = $this->getMockBuilder(\stdClass::class)->addMethods(
+            ['write']
+        )->disableOriginalConstructor()->getMock();
 
-        $body->expects($this->once())->method('write')
-            ->with(
+        $body->expects($this->once())->method('write')->with(
                 json_encode(
                     ['error' => 'Some description'],
                     JSON_THROW_ON_ERROR,
@@ -29,15 +34,17 @@ class ErrorHandlerTest extends TestCase
                 )
             );
 
-        $response->method('getBody')
-            ->willReturn($body);
+        $response->method('getBody')->willReturn($body);
+        $response->method('withStatus')->willReturn($response);
 
-        $responseFactory->method('createResponse')
-            ->willReturn($response);
+        $responseFactory->method('createResponse')->willReturn($response);
 
-        $request = $this->getMockBuilder(ServerRequestInterface::class)->disableOriginalConstructor()->getMock();
+        $request = $this->getMockBuilder(ServerRequestInterface::class)
+            ->disableOriginalConstructor()->getMock();
 
-        $exception = $this->getMockBuilder(\stdClass::class)->addMethods(['getCode', 'getMessage'])->disableOriginalConstructor()->getMock();
+        $exception = $this->getMockBuilder(\stdClass::class)->addMethods(
+            ['getCode', 'getMessage']
+        )->disableOriginalConstructor()->getMock();
         $exception->method('getCode')->willReturn(404);
         $exception->method('getMessage')->willReturn('Some description');
 
