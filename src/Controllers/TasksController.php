@@ -42,7 +42,7 @@ class TasksController implements ControllerInterface
 
     public function add(Request $request, Response $response): Response
     {
-        $body           = $request->getParsedBody();
+        $body           = Sanitizer::sanitize($request->getParsedBody());
         $body['status'] = Task::STATUS_NEW;
 
         try {
@@ -52,7 +52,7 @@ class TasksController implements ControllerInterface
                 $response,
                 null,
                 $exception,
-            );
+                );
         }
 
         $task = $this->taskFactory->create(Sanitizer::sanitize($body));
