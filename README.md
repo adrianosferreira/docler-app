@@ -28,6 +28,7 @@ This REST API has the following routes:
 - Doctrine ORM
 - Doctrine Migrations
 - MySQL
+- Docker
 - PHPStan
 - PHP_CodeSniffer
 - PHPUnit
