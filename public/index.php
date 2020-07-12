@@ -6,9 +6,9 @@ use App\Factories\TaskFactory;
 use App\Midleware\ErrorHandlerMiddleware;
 use App\Midleware\ResponseParserMiddleware;
 use App\Repositories\TaskRepository;
-use App\Services\ResponseFormatterJson;
-use App\Services\RoutesBuilderInterface;
-use App\Services\TaskRoutesBuilder;
+use App\Services\Response\ResponseFormatterJson;
+use App\Services\Routes\RoutesBuilderInterface;
+use App\Services\Routes\TaskRoutesBuilder;
 use Slim\Factory\AppFactory;
 
 require_once __DIR__ . '/../vendor/autoload.php';

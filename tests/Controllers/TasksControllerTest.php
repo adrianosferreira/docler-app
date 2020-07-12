@@ -6,7 +6,7 @@ use App\Controllers\TasksController;
 use App\Entities\Task;
 use App\Factories\TaskFactory;
 use App\Repositories\TaskRepository;
-use App\Services\ResponseFormatterInterface;
+use App\Services\Response\ResponseFormatterInterface;
 use PHPUnit\Framework\TestCase;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;

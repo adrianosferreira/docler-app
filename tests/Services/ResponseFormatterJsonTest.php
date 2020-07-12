@@ -2,7 +2,7 @@
 
 namespace App\Tests\Services;
 
-use App\Services\ResponseFormatterJson;
+use App\Services\Response\ResponseFormatterJson;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface as Response;
 

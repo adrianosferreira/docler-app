@@ -3,7 +3,7 @@
 namespace App\Tests\Services;
 
 use App\Controllers\ControllerInterface;
-use App\Services\TaskRoutesBuilder;
+use App\Services\Routes\TaskRoutesBuilder;
 use PHPUnit\Framework\TestCase;
 use Slim\App;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Validator;
 
 use App\Entities\Task;
 
